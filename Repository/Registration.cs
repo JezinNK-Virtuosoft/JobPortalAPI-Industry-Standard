@@ -1,4 +1,5 @@
-﻿using JobPortalAPI_1.ViewModel;
+﻿using JobPortalAPI_1.Services;
+using JobPortalAPI_1.ViewModel;
 using System.CodeDom.Compiler;
 using System.Data;
 using System.Data.SqlClient;
@@ -37,12 +38,12 @@ namespace JobPortalAPI_1.Repository
                     command.Parameters.AddWithValue("@Email", registrationDetails.Email);
                     command.Parameters.AddWithValue("@PhoneNumber", registrationDetails.PhoneNumber);
                     command.Parameters.AddWithValue("@UserTypeID", registrationDetails.UserTypeID);
-                    var tempPassword= await GenerateSalt();
+                    var tempPassword= await PasswordHandler.GenerateSalt();
                     MailCredintials.Add("Name", registrationDetails.FirstName);
                     MailCredintials.Add("Email", registrationDetails.Email);
                     MailCredintials.Add(registrationDetails.Email, tempPassword);
 
-                    registrationDetails.Password =await  ToHashSHA1(tempPassword);
+                    registrationDetails.Password =await  PasswordHandler.ToHashSHA1(tempPassword);
                     command.Parameters.AddWithValue("@Password", registrationDetails.Password);
 
                     int result= await command.ExecuteNonQueryAsync();
@@ -60,41 +61,6 @@ namespace JobPortalAPI_1.Repository
                 }
             }
         }
-        //Converting to SHA1Hash
-        public async Task<string> ToHashSHA1(string Password) 
-        {
-            return await Task.Run(() =>
-            {
-                using (SHA1Managed sha1 = new SHA1Managed())
-                {
-                    byte[] bytes = sha1.ComputeHash(Encoding.UTF8.GetBytes(Password));
-                    StringBuilder shaBuilder = new StringBuilder();
-                    foreach (byte b in bytes)
-                    {
-                        shaBuilder.Append(b.ToString("x2"));
-                    }
-                    return shaBuilder.ToString();
-                }
-            });
-        }
-
         
-
-        
-        // Random Password Generator using Salt
-        public async Task<string> GenerateSalt()
-        {
-            int saltLength = new Random().Next(8, 12);
-            byte[] salt = new byte[saltLength];
-            await Task.Run(() =>
-            {
-                using (var rng = new RNGCryptoServiceProvider())
-                {
-                    rng.GetBytes(salt);
-                }
-            });
-            
-            return Convert.ToBase64String(salt);
-        }
     }
 }
