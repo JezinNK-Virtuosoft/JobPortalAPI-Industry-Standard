@@ -15,7 +15,7 @@ namespace JobPortalAPI_1.Repository
         {
             var mail = "demoJobPortal@outlook.com";
             var pwd = _configuration["Credentials:Password"];
-            var client = new SmtpClient("smtp-live.outlook.com", 587)
+            var client = new SmtpClient("smtp-mail.outlook.com", 587)
             {
                 EnableSsl = true,
                 Credentials = new NetworkCredential(mail, pwd)

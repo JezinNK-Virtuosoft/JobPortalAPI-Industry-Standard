@@ -25,7 +25,7 @@ namespace JobPortalAPI_1.Repository
             string ConnectionString = _configuration.GetConnectionString("DefaultConnection");
             Dictionary<string, string> MailCredintials = new Dictionary<string, string>();
             Dictionary<string, string> MailContents;
-            using (SqlConnection connection=new SqlConnection())
+            using (SqlConnection connection=new SqlConnection(ConnectionString))
             {   
                 connection.Open();
                 string query = "spAddUser";
@@ -37,12 +37,13 @@ namespace JobPortalAPI_1.Repository
                     command.Parameters.AddWithValue("@Email", registrationDetails.Email);
                     command.Parameters.AddWithValue("@PhoneNumber", registrationDetails.PhoneNumber);
                     command.Parameters.AddWithValue("@UserTypeID", registrationDetails.UserTypeID);
-                    var tempPassword= await GenerateSalt(registrationDetails.Email,registrationDetails.PhoneNumber);
-                    
+                    var tempPassword= await GenerateSalt();
+                    MailCredintials.Add("Name", registrationDetails.FirstName);
                     MailCredintials.Add("Email", registrationDetails.Email);
                     MailCredintials.Add(registrationDetails.Email, tempPassword);
 
                     registrationDetails.Password =await  ToHashSHA1(tempPassword);
+                    command.Parameters.AddWithValue("@Password", registrationDetails.Password);
 
                     int result= await command.ExecuteNonQueryAsync();
                     if (result > 0)
@@ -81,21 +82,15 @@ namespace JobPortalAPI_1.Repository
 
         
         // Random Password Generator using Salt
-        public async Task<string> GenerateSalt(string email,long phoneNumber)
-        {   string regex=@"[^\w\d]";
-            string combinedData = email + phoneNumber;
-            combinedData=Regex.Replace(combinedData,regex,string.Empty);
-            byte[] salt = new byte[16];
+        public async Task<string> GenerateSalt()
+        {
+            int saltLength = new Random().Next(8, 12);
+            byte[] salt = new byte[saltLength];
             await Task.Run(() =>
             {
                 using (var rng = new RNGCryptoServiceProvider())
                 {
-                    byte[] combinedBytes = Encoding.UTF8.GetBytes(combinedData);
-                    byte[] randomBytes = new byte[16 - combinedBytes.Length];
-                    rng.GetBytes(randomBytes);
-
-                    Buffer.BlockCopy(combinedBytes, 0, salt, 0, combinedBytes.Length);
-                    Buffer.BlockCopy(randomBytes, 0, salt, combinedBytes.Length, randomBytes.Length);
+                    rng.GetBytes(salt);
                 }
             });
             
