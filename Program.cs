@@ -1,4 +1,5 @@
 using JobPortalAPI_1.Repository;
+using JobPortalAPI_1.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,8 +10,8 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IRegistration, Registration>();
-builder.Services.AddTransient<IEmailSender, EmailSender>(); 
-
+builder.Services.AddTransient<IEmailSender, EmailSender>();
+builder.Services.AddTransient<IValidation, Validation>();
 
 var app = builder.Build();
 

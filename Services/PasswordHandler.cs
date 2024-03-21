@@ -39,7 +39,7 @@ namespace JobPortalAPI_1.Services
                 }
             });
 
-            return Convert.ToBase64String(salt);
+            return Convert.ToBase64String(salt).Trim();
         }
     }
 }

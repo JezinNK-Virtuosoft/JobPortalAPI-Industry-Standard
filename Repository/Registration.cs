@@ -61,6 +61,24 @@ namespace JobPortalAPI_1.Repository
                 }
             }
         }
+
+        //Checking the Email Already Exists
+        public async Task<bool> IsUserEmailExists(string Email)
+        {
+            string ConnectionString = _configuration.GetConnectionString("DefaultConnection");
+            using (SqlConnection connection=new SqlConnection(ConnectionString))
+            {
+                string query = "SELECT Email FROM UserDetails WHERE Email=@Email";
+                using (SqlCommand command=new SqlCommand(query,connection))
+                {
+                    command.Parameters.AddWithValue("@Email", Email);
+
+                    SqlDataReader dataReader= await command.ExecuteReaderAsync();
+
+                    return dataReader.HasRows;
+                }
+            }
+        }
         
     }
 }
