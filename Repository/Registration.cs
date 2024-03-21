@@ -68,6 +68,7 @@ namespace JobPortalAPI_1.Repository
             string ConnectionString = _configuration.GetConnectionString("DefaultConnection");
             using (SqlConnection connection=new SqlConnection(ConnectionString))
             {
+                connection.Open();
                 string query = "SELECT Email FROM UserDetails WHERE Email=@Email";
                 using (SqlCommand command=new SqlCommand(query,connection))
                 {

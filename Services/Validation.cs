@@ -1,4 +1,5 @@
-﻿using JobPortalAPI_1.Repository;
+﻿using JobPortalAPI_1.Model;
+using JobPortalAPI_1.Repository;
 using System.Reflection.Metadata.Ecma335;
 using System.Text.RegularExpressions;
 
@@ -38,5 +39,10 @@ namespace JobPortalAPI_1.Services
             }
             return false;
         }
+
+        
+        
+        
+
     }
 }

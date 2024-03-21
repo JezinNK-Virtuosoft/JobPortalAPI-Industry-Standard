@@ -15,6 +15,6 @@ namespace JobPortalAPI_1.Model
         public int UpdatedBy { get; set; }
         public DateTime UpdatedTime { get; set; }
         public int Status { get; set; }
-        public string Remark { get; set; }
+        public string? Remark { get; set; }
     }
 }

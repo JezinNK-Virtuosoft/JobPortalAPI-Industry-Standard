@@ -10,6 +10,8 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IRegistration, Registration>();
+builder.Services.AddScoped<IAdminDataHandling, AdminDataHandling>();
+builder.Services.AddScoped<IRetrivingData, RetrievingData>();
 builder.Services.AddTransient<IEmailSender, EmailSender>();
 builder.Services.AddTransient<IValidation, Validation>();
 
