@@ -1,5 +1,7 @@
-﻿using JobPortalAPI_1.Model;
+﻿using JobPortalAPI_1.Controllers;
+using JobPortalAPI_1.Model;
 using JobPortalAPI_1.Repository;
+using JobPortalAPI_1.ViewModel;
 using System.Reflection.Metadata.Ecma335;
 using System.Text.RegularExpressions;
 
@@ -40,7 +42,14 @@ namespace JobPortalAPI_1.Services
             return false;
         }
 
-        
+        //Check wheter the Credentials are of correct length
+        public async Task<bool> Credentials(LoginCredintials loginCredintials) 
+        {   
+            
+            var Length = new Regex("^(?=.{1,64}$)");
+                        
+            return await EmailValidator(loginCredintials.Email) && Length.IsMatch(loginCredintials.Password);
+        }
         
         
 
