@@ -1,5 +1,6 @@
 ﻿using JobPortalAPI_1.Services;
 using JobPortalAPI_1.ViewModel;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -14,7 +15,7 @@ namespace JobPortalAPI_1.Controllers
         {
             _loginhandling = loginHandling;
         }
-
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> ValidateUserLogin([FromBody]LoginCredintials credintials)
         {
