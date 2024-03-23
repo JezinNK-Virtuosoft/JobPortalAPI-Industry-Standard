@@ -20,6 +20,7 @@ namespace JobPortalAPI_1.Services
             _loginValidator = loginValidator;
             _validation = validation;
         }
+        //Validating User Login
         public TokenUserDetails ValidateUser(LoginCredintials credintials)
         {
             if (credintials!=null)
@@ -34,6 +35,7 @@ namespace JobPortalAPI_1.Services
             
             return new TokenUserDetails();    
         }
+        //Generating JWT TOKEN
         public async Task<string> GenerateUserToken(TokenUserDetails userdetails)
         {
             return await Task.Run(() =>
@@ -52,7 +54,7 @@ namespace JobPortalAPI_1.Services
             });
             
         }
-        
+        //User Login Handling
         public async Task<string> UserLoginHandler(LoginCredintials credintials) 
         {
             credintials.Email = credintials.Email.Trim();
@@ -69,6 +71,51 @@ namespace JobPortalAPI_1.Services
             }
             return null;
         }
-               
+        public TokenAdminDetails ValidateAdmin(LoginCredintials credintials) 
+        {
+            TokenAdminDetails adminDetails = null;
+            int AdminID = _loginValidator.ValidateAdmin(credintials);
+            if (AdminID>-1)
+            {
+                adminDetails=_loginValidator.GetAdminDetailsByID(AdminID);
+            }
+            return adminDetails;
+        }
+
+        public async Task<string> GenerateAdminToken(TokenAdminDetails adminDetails)
+        {
+            return await Task.Run(() =>
+            {
+                var securitykey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
+                var credentials = new SigningCredentials(securitykey, SecurityAlgorithms.HmacSha256);
+                var claims = new[]
+                {
+                
+                new Claim(ClaimTypes.Email,adminDetails.Email),
+                new Claim(ClaimTypes.Role,adminDetails.UserTypeID.ToString())
+            };
+                var token = new JwtSecurityToken(_configuration["Jwt:Issuer"], _configuration["Jwt:Audience"], claims,
+                    expires: DateTime.Now.AddDays(1), signingCredentials: credentials);
+                return new JwtSecurityTokenHandler().WriteToken(token);
+            });
+
+        }
+
+        public async Task<string> AdminLoginHandler(LoginCredintials credintials)
+        {
+            credintials.Email=credintials.Email.Trim();
+            credintials.Password = credintials.Password.Trim();
+            if (await _validation.Credentials(credintials))
+            {
+                credintials.Password = await PasswordHandler.ToHashSHA1(credintials.Password);
+                var tokenAdminDetails=ValidateAdmin(credintials);
+                if (tokenAdminDetails!=null)
+                {
+                    var token=await GenerateAdminToken(tokenAdminDetails);
+                    return token;
+                }
+            }
+            return null;
+        }
     }
 }
