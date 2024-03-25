@@ -6,5 +6,7 @@ namespace JobPortalAPI_1.Repository
     {
         int ValidateUser(LoginCredintials credintials);
         TokenUserDetails GetUserDetailsByID(int UserLoginID);
+        int ValidateAdmin(LoginCredintials credintials);
+        TokenAdminDetails GetAdminDetailsByID(int AdminID);
     }
 }

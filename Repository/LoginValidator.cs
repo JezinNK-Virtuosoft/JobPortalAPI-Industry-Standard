@@ -63,5 +63,53 @@ namespace JobPortalAPI_1.Repository
                 return null;
             }
         }
+
+        public int ValidateAdmin(LoginCredintials credintials)
+        {
+            string connectionString = _configuration.GetConnectionString("DefaultConnection");
+            using (SqlConnection connection=new SqlConnection(connectionString))
+            {
+                connection.Open();
+                string Query = "SELECT AL.AdminLoginID FROM AdminLoginDetails AL JOIN Admin A ON AL.AdminLoginID=A.AdminLoginID WHERE A.Email=@Email AND AL.Password=@Password";
+                using (SqlCommand command=new SqlCommand(Query,connection))
+                {
+                    command.Parameters.AddWithValue("@Email", credintials.Email);
+                    command.Parameters.AddWithValue("@Password", credintials.Password);
+
+                    SqlDataReader reader = command.ExecuteReader();
+                    if (reader.Read()) 
+                    {
+                        int AdminID = Convert.ToInt32(reader["AdminLoginID"]);
+                        return AdminID;
+                    }
+                }
+            }
+            return -1;
+        }
+        
+        public TokenAdminDetails GetAdminDetailsByID(int AdminID) 
+        {
+            string connectionString = _configuration.GetConnectionString("DefaultConnection");
+            using (SqlConnection connection=new SqlConnection(connectionString))
+            {   connection.Open();
+                string Query = "SELECT A.AdminID,A.Email,AL.UserTypeID FROM Admin A JOIN AdminLoginDetails AL ON A.AdminLoginID= AL.AdminLoginID WHERE AL.AdminLoginID=@AdminID";
+                using (SqlCommand command=new SqlCommand(Query,connection))
+                {
+                    command.Parameters.AddWithValue("@AdminID", AdminID);
+                    SqlDataReader reader= command.ExecuteReader();
+                    if (reader.Read()) 
+                    {
+                        TokenAdminDetails tokenAdminDetails = new TokenAdminDetails()
+                        {
+                            AdminID = Convert.ToInt32(reader["AdminID"]),
+                            Email = reader["Email"].ToString(),
+                            UserTypeID = Convert.ToInt32(reader["UserTypeID"])
+                        };
+                        return tokenAdminDetails;
+                    }
+                }
+                return null;
+            }
+        }
     }
 }

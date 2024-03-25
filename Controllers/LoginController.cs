@@ -1,5 +1,6 @@
 ﻿using JobPortalAPI_1.Services;
 using JobPortalAPI_1.ViewModel;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -14,7 +15,7 @@ namespace JobPortalAPI_1.Controllers
         {
             _loginhandling = loginHandling;
         }
-
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> ValidateUserLogin([FromBody]LoginCredintials credintials)
         {
@@ -30,6 +31,25 @@ namespace JobPortalAPI_1.Controllers
             }
             catch (Exception ex)
             {
+                return BadRequest($"Error Message:{ex.Message}");
+            }
+        }
+
+        [HttpPost("AdminLogin")]
+        public async Task<IActionResult> ValidateAdminLogin([FromBody]LoginCredintials credintials) 
+        {
+            try
+            {
+              var token=await  _loginhandling.AdminLoginHandler(credintials);
+                if (token!=null)
+                {
+                    return Ok(token);
+                }
+                return Unauthorized("Invalid Credentials");
+            }
+            catch (Exception ex)
+            {
+
                 return BadRequest($"Error Message:{ex.Message}");
             }
         }
