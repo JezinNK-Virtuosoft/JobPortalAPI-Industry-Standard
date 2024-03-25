@@ -10,5 +10,6 @@ namespace JobPortalAPI_1.Model
         public DateTime CreatedDate { get; set; }
         public int UpdatedBy { get; set; }
         public DateTime UpdatedTime { get; set; }
+        public int UserTypeID { get; set; }
     }
 }
