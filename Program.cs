@@ -8,7 +8,10 @@ using System.Text;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
+//Add Cors service
+builder.Services.AddCors(p => p.AddPolicy("corsPolicy", build =>
+build.WithOrigins("http://localhost:4200").AllowAnyMethod().AllowAnyHeader()
+));
 //Add Bearer Scheme to Swagger
 builder.Services.AddSwaggerGen(options =>
 {
@@ -72,7 +75,7 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
-
+app.UseCors("corsPolicy");
 app.MapControllers();
 
 app.Run();
