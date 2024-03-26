@@ -17,7 +17,7 @@ namespace JobPortalAPI_1.Controllers
         }
         [Authorize]
         [HttpPost]
-        public async Task<IActionResult> ValidateUserLogin([FromBody]LoginCredintials credintials)
+        public async Task<IActionResult> ValidateUserLogin([FromBody]LoginCredentials credintials)
         {
             try
             {
@@ -36,7 +36,7 @@ namespace JobPortalAPI_1.Controllers
         }
 
         [HttpPost("AdminLogin")]
-        public async Task<IActionResult> ValidateAdminLogin([FromBody]LoginCredintials credintials) 
+        public async Task<IActionResult> ValidateAdminLogin([FromBody]LoginCredentials credintials) 
         {
             try
             {

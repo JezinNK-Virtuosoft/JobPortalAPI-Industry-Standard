@@ -43,7 +43,7 @@ namespace JobPortalAPI_1.Services
         }
 
         //Check wheter the Credentials are of correct length
-        public async Task<bool> Credentials(LoginCredintials loginCredintials) 
+        public async Task<bool> Credentials(LoginCredentials loginCredintials) 
         {   
             
             var Length = new Regex("^(?=.{1,64}$)");

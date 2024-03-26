@@ -11,7 +11,7 @@ namespace JobPortalAPI_1.Repository
         {
             _configuration = configuration;
         }
-        public int ValidateUser(LoginCredintials credintials)
+        public int ValidateUser(LoginCredentials credintials)
         {
             string connectionString = _configuration.GetConnectionString("DefaultConnection");
             using (SqlConnection connection=new SqlConnection(connectionString))
@@ -64,7 +64,7 @@ namespace JobPortalAPI_1.Repository
             }
         }
 
-        public int ValidateAdmin(LoginCredintials credintials)
+        public int ValidateAdmin(LoginCredentials credintials)
         {
             string connectionString = _configuration.GetConnectionString("DefaultConnection");
             using (SqlConnection connection=new SqlConnection(connectionString))

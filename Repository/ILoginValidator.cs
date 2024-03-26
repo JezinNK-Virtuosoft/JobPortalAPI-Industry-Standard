@@ -4,9 +4,9 @@ namespace JobPortalAPI_1.Repository
 {
     public interface ILoginValidator
     {
-        int ValidateUser(LoginCredintials credintials);
+        int ValidateUser(LoginCredentials credintials);
         TokenUserDetails GetUserDetailsByID(int UserLoginID);
-        int ValidateAdmin(LoginCredintials credintials);
+        int ValidateAdmin(LoginCredentials credintials);
         TokenAdminDetails GetAdminDetailsByID(int AdminID);
     }
 }

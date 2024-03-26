@@ -21,7 +21,7 @@ namespace JobPortalAPI_1.Services
             _validation = validation;
         }
         //Validating User Login
-        public TokenUserDetails ValidateUser(LoginCredintials credintials)
+        public TokenUserDetails ValidateUser(LoginCredentials credintials)
         {
             if (credintials!=null)
             {
@@ -55,7 +55,7 @@ namespace JobPortalAPI_1.Services
             
         }
         //User Login Handling
-        public async Task<string> UserLoginHandler(LoginCredintials credintials) 
+        public async Task<string> UserLoginHandler(LoginCredentials credintials) 
         {
             credintials.Email = credintials.Email.Trim();
             credintials.Password = credintials.Password.Trim();
@@ -71,7 +71,7 @@ namespace JobPortalAPI_1.Services
             }
             return null;
         }
-        public TokenAdminDetails ValidateAdmin(LoginCredintials credintials) 
+        public TokenAdminDetails ValidateAdmin(LoginCredentials credintials) 
         {
             TokenAdminDetails adminDetails = null;
             int AdminID = _loginValidator.ValidateAdmin(credintials);
@@ -101,7 +101,7 @@ namespace JobPortalAPI_1.Services
 
         }
 
-        public async Task<string> AdminLoginHandler(LoginCredintials credintials)
+        public async Task<string> AdminLoginHandler(LoginCredentials credintials)
         {
             credintials.Email=credintials.Email.Trim();
             credintials.Password = credintials.Password.Trim();
